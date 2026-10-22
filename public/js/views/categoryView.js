@@ -327,7 +327,6 @@ async function fetchAndRenderCategoryProducts(categoryId) {
             ` : `
               <div class="absolute bottom-2 left-3 text-[10px] text-slate-400 flex items-center gap-1.5">
                 <span>Tồn kho: <strong class="text-emerald-400">${product.stock}</strong></span>
-                ${product.subType ? `<span class="px-1.5 py-0.5 rounded bg-slate-900/90 border border-slate-700 text-slate-300 text-[9px]">${product.subType}</span>` : ''}
               </div>
             `}
           </div>
@@ -335,10 +334,17 @@ async function fetchAndRenderCategoryProducts(categoryId) {
           <!-- Content -->
           <div class="p-4 flex-1 flex flex-col justify-between">
             <div>
-              <div class="text-[11px] text-emerald-400/80 font-medium line-clamp-1 mb-1 flex items-center gap-1">
-                <i class="fa-solid fa-cauldron text-[10px]"></i>
+              <div class="text-[11px] text-emerald-400/90 font-medium line-clamp-1 mb-1 flex items-center gap-1.5">
+                <i class="fa-solid fa-cauldron text-[10px] text-emerald-400/70"></i>
                 <span>${product.subCategory || 'Bảo Khố'}</span>
               </div>
+              ${product.subType ? `
+                <div class="mb-1.5">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-950 text-cyan-300 border border-cyan-500/30">
+                    ${product.subType}
+                  </span>
+                </div>
+              ` : ''}
 
               <h3 onclick="window.navigateToProduct('${product._id}')" class="font-cinzel text-base font-bold text-slate-100 hover:text-emerald-400 transition cursor-pointer line-clamp-1">
                 ${product.name}

@@ -89,6 +89,13 @@ async function renderHomeView() {
                     <i class="fa-solid fa-tag text-[10px] text-emerald-400/70"></i>
                     <span>${product.subCategory || 'Bảo Khố'}</span>
                   </div>
+                  ${product.subType ? `
+                    <div class="mb-1.5">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-950 text-cyan-300 border border-cyan-500/30">
+                        ${product.subType}
+                      </span>
+                    </div>
+                  ` : ''}
 
                   <h3 onclick="window.navigateToProduct('${product._id}')" class="font-cinzel text-base font-bold text-slate-100 hover:text-emerald-400 transition cursor-pointer line-clamp-1">
                     ${product.name}
@@ -178,7 +185,7 @@ async function renderHomeView() {
 
             <h1 class="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-black text-slate-100 leading-snug sm:leading-normal">
               <span>Khai Mở Kỳ Trân</span>
-              <span class="block mt-2 sm:mt-3 shimmer-text">Trấn Sơn Bảo Vật</span>
+              <span class="block mt-2 sm:mt-3 text-4xl sm:text-5xl lg:text-6xl shimmer-text" style="font-family: 'Lora', 'Playfair Display', serif;">Tr<span style="font-size: 1.1em; display: inline-block;">ấ</span>n Sơn Bảo Vật</span>
             </h1>
 
             <p class="text-sm sm:text-base text-slate-300 mt-4 font-normal leading-relaxed">

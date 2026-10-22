@@ -105,12 +105,19 @@ async function renderProductDetailView(productId) {
             <div>
               
               <!-- Phân Mục Của Bảo Vật & Nút Sửa Bảo Vật cho Admin/Seller -->
-              <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-emerald-400">
-                  <i class="fa-solid fa-scroll text-emerald-400"></i>
-                  <span>Phân Mục:</span>
-                  <strong class="text-slate-100">${product.subCategory || 'Bảo Khố'}</strong>
-                  ${product.subType ? `<span class="text-slate-400 text-[11px]">(${product.subType})</span>` : ''}
+              <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+                <div class="flex flex-col gap-1.5">
+                  <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-emerald-400 self-start">
+                    <i class="fa-solid fa-scroll text-emerald-400"></i>
+                    <span>Phân Mục:</span>
+                    <strong class="text-slate-100">${product.subCategory || 'Bảo Khố'}</strong>
+                  </div>
+                  ${product.subType ? `
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-cyan-950/70 border border-cyan-500/40 text-[11px] text-cyan-300 font-semibold self-start shadow-sm">
+                      <i class="fa-solid fa-tag text-[10px] text-cyan-400"></i>
+                      <strong class="text-slate-200">${product.subType}</strong>
+                    </div>
+                  ` : ''}
                 </div>
 
                 ${(window.store.user && (window.store.user.role === 'admin' || (product.seller && ((product.seller._id || product.seller).toString() === window.store.user._id.toString())))) ? `

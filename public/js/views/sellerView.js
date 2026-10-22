@@ -74,6 +74,13 @@ async function renderSellerView() {
                 <i class="fa-solid fa-scroll text-[9px] text-emerald-400/60"></i>
                 <span>${p.subCategory || 'Bảo Khố'}</span>
               </div>
+              ${p.subType ? `
+                <div class="mt-1">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-slate-800 text-cyan-300 border border-cyan-500/30">
+                    ${p.subType}
+                  </span>
+                </div>
+              ` : ''}
             </div>
           </div>
         </td>
@@ -151,7 +158,7 @@ async function renderSellerView() {
 
           <form id="create-product-form" onsubmit="window.handleCreateProductSubmit(event)" class="space-y-4">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
               <!-- Tên bảo vật -->
               <div>
                 <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
@@ -185,6 +192,17 @@ async function renderSellerView() {
                 <select name="subCategory" id="create-subcategory-select" required class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">
                   <!-- dynamically populated -->
                 </select>
+              </div>
+
+              <!-- Loại bảo vật cụ thể -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                  Loại (Ví dụ: Tịnh Tâm)
+                </label>
+                <input type="text" 
+                       name="subType" 
+                       placeholder="Ví dụ: Tịnh Tâm, Hồi Phục..." 
+                       class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition" />
               </div>
 
               <!-- Phẩm cấp -->
@@ -406,6 +424,7 @@ window.handleCreateProductSubmit = async function(e) {
     price: form.price.value,
     category: form.category.value,
     subCategory: form.subCategory ? form.subCategory.value : '',
+    subType: form.subType ? form.subType.value.trim() : '',
     grade: form.grade.value,
     stock: form.stock.value,
     image: form.image.value.trim() || 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600'
@@ -474,8 +493,8 @@ window.openEditProductModal = function(id, encodedProd) {
             <input type="text" name="name" value="${p.name}" required class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition" />
           </div>
 
-          <!-- Danh Mục & Phân Mục (Cho phép chọn phân mục sau khi chọn danh mục) & Phẩm Cấp -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <!-- Danh Mục, Phân Mục, Loại & Phẩm Cấp -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             <div>
               <label class="block text-xs text-slate-300 font-semibold mb-1">Danh Mục <span class="text-cyan-400">*</span></label>
               <select name="category" id="edit-product-category" onchange="window.handleEditCategoryChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">
@@ -491,6 +510,11 @@ window.openEditProductModal = function(id, encodedProd) {
               <select name="subCategory" id="edit-product-subcategory" required class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">
                 ${subCatOptions}
               </select>
+            </div>
+
+            <div>
+              <label class="block text-xs text-slate-300 font-semibold mb-1">Loại</label>
+              <input type="text" name="subType" value="${p.subType || ''}" placeholder="Ví dụ: Tịnh Tâm, Hồi Phục..." class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition" />
             </div>
 
             <div>
@@ -593,6 +617,7 @@ window.handleUpdateProductSubmit = async function(e, id) {
     image: form.image.value.trim(),
     category: form.category ? form.category.value : undefined,
     subCategory: form.subCategory ? form.subCategory.value : undefined,
+    subType: form.subType ? form.subType.value.trim() : '',
     grade: form.grade ? form.grade.value : undefined
   };
 
