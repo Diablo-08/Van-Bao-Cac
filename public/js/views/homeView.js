@@ -112,7 +112,6 @@ async function renderHomeView() {
                     <div class="text-[10px] text-slate-400 uppercase">Giá Bán</div>
                     <div class="text-amber-300 font-bold text-sm sm:text-base font-cinzel flex items-center gap-1">
                       <span>💎 ${(product.price || 0).toLocaleString('vi-VN')}</span>
-                      <span class="text-[10px] text-amber-400/70 font-sans">Linh Thạch</span>
                     </div>
                   </div>
 

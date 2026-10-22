@@ -361,7 +361,6 @@ async function fetchAndRenderCategoryProducts(categoryId) {
                 <div class="text-[10px] text-slate-400 uppercase">Giá Bán</div>
                 <div class="text-amber-300 font-bold text-base font-cinzel flex items-center gap-1">
                   <span>💎 ${(product.price || 0).toLocaleString('vi-VN')}</span>
-                  <span class="text-[10px] text-amber-400/70 font-sans">LT</span>
                 </div>
               </div>
 
@@ -394,7 +393,8 @@ async function fetchAndRenderCategoryProducts(categoryId) {
     // Render từng nhóm phân mục
     let html = '';
     const groupKeys = Object.keys(groups);
-    if (catMeta.subCategories && catMeta.subCategories.length > 0) {
+    const catMeta = CATEGORY_META[categoryId] || CATEGORY_META['all'];
+    if (catMeta && catMeta.subCategories && catMeta.subCategories.length > 0) {
       groupKeys.sort((a, b) => {
         const idxA = catMeta.subCategories.indexOf(a);
         const idxB = catMeta.subCategories.indexOf(b);

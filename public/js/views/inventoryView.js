@@ -73,7 +73,6 @@ async function renderInventoryView() {
     });
 
     const itemsGrid = items.map(it => {
-      const isOutOfStock = it.stock === 0;
       const isDeleted = it.stock === -1;
 
       return `
@@ -88,14 +87,6 @@ async function renderInventoryView() {
             
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none"></div>
 
-            ${isOutOfStock ? `
-              <div class="absolute inset-0 bg-black/60 flex items-center justify-center pointer-events-none">
-                <span class="px-3 py-1 rounded-full bg-rose-950 text-rose-300 border border-rose-500 text-[11px] font-bold tracking-wider uppercase flex items-center gap-1.5">
-                  <i class="fa-solid fa-ban text-rose-400 text-[10px]"></i> Hết Hàng
-                </span>
-              </div>
-            ` : ''}
-
             ${isDeleted ? `
               <div class="absolute inset-0 bg-black/60 flex items-center justify-center pointer-events-none">
                 <span class="px-3 py-1 rounded-full bg-slate-900 text-slate-400 border border-slate-600 text-[11px] font-bold tracking-wider uppercase">
@@ -107,7 +98,7 @@ async function renderInventoryView() {
 
           <!-- Tên bảo vật -->
           <div class="p-4 flex-1 flex items-center justify-center text-center bg-slate-900/60">
-            <h3 class="font-cinzel text-sm sm:text-base font-bold ${isOutOfStock ? 'text-rose-300/70' : isDeleted ? 'text-slate-500' : 'text-slate-100 group-hover:text-emerald-300'} transition line-clamp-2">
+            <h3 class="font-cinzel text-sm sm:text-base font-bold ${isDeleted ? 'text-slate-500' : 'text-slate-100 group-hover:text-emerald-300'} transition line-clamp-2">
               ${it.name}
             </h3>
           </div>
