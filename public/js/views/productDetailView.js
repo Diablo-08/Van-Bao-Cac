@@ -32,7 +32,7 @@ async function renderProductDetailView(productId) {
       'cong-phap': 'Công Pháp & Bí Tịch',
       'dan-duoc': 'Đan Dược & Linh Thảo',
       'phap-bao': 'Pháp Bảo & Binh Khí',
-      'linh-vat': 'Linh Vật'
+      'linh-vat': 'Bảo Khố Tạp Vật'
     };
 
     container.innerHTML = `

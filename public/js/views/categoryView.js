@@ -32,11 +32,11 @@ const CATEGORY_META = {
     name: 'Pháp Bảo & Binh Khí',
     desc: 'Thần binh công kích, giáp trụ hộ thân, nhẫn không gian trữ vật và ngự không phi thuyền',
     icon: 'fa-wand-magic-sparkles',
-    subCategories: ['Công Kích Pháp Bảo', 'Hộ Thân Pháp Bảo', 'Không Gian Pháp Bảo', 'Ngự Không Pháp Bảo']
+    subCategories: ['Công Kích Pháp Bảo', 'Hộ Thân Pháp Bảo', 'Ngự Không Pháp Bảo', 'Không Gian Pháp Bảo']
   },
   'linh-vat': {
-    name: 'Linh Vật',
-    desc: 'Thượng cổ thần thú, ấu thú linh sủng, tinh thạch khoáng vật và pháp trận hộ sơn',
+    name: 'Bảo Khố Tạp Vật',
+    desc: 'Hành trang tu tiên, linh thú hộ đạo cùng vô số kỳ trân dị vật độc bá.',
     icon: 'fa-dragon',
     subCategories: ['Linh Sủng, Yêu Thú', 'Linh Tài, Tạp Vật']
   }
@@ -70,7 +70,7 @@ async function renderCategoryView(categoryId = 'all') {
     { id: 'cong-phap', name: 'Công Pháp & Bí Tịch' },
     { id: 'dan-duoc', name: 'Đan Dược & Linh Thảo' },
     { id: 'phap-bao', name: 'Pháp Bảo & Binh Khí' },
-    { id: 'linh-vat', name: 'Linh Vật' }
+    { id: 'linh-vat', name: 'Bảo Khố Tạp Vật' }
   ];
 
   const catTabsHtml = categoryTabs.map(t => {
@@ -388,6 +388,16 @@ async function fetchAndRenderCategoryProducts(categoryId) {
     // Render từng nhóm phân mục
     let html = '';
     const groupKeys = Object.keys(groups);
+    if (catMeta.subCategories && catMeta.subCategories.length > 0) {
+      groupKeys.sort((a, b) => {
+        const idxA = catMeta.subCategories.indexOf(a);
+        const idxB = catMeta.subCategories.indexOf(b);
+        if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+        if (idxA !== -1) return -1;
+        if (idxB !== -1) return 1;
+        return a.localeCompare(b);
+      });
+    }
 
     // Nếu chỉ có 1 nhóm hoặc người dùng lọc theo 1 subCategory cụ thể
     if (groupKeys.length === 1 && currentCategoryFilter.subCategory !== 'all') {

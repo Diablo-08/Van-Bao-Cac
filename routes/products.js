@@ -28,8 +28,8 @@ const CATEGORIES = [
   },
   {
     id: 'linh-vat',
-    name: 'Linh Vật',
-    description: 'Thượng cổ thần thú, thiên địa dị chủng trấn thủ động phủ',
+    name: 'Bảo Khố Tạp Vật',
+    description: 'Hành trang tu tiên, linh thú hộ đạo cùng vô số kỳ trân dị vật độc bá.',
     icon: 'fa-dragon',
     bgGradient: 'from-purple-950/40 to-slate-900'
   }

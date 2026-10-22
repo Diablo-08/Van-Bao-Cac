@@ -4,7 +4,7 @@
 const SUBCATEGORIES_MAP = {
   'cong-phap': ['Tâm Pháp', 'Đấu Pháp', 'Bách Nghệ Điển Tịch', 'Ma Đạo Bí Tịch'],
   'dan-duoc': ['Đan Dược Đột Phá', 'Đan Dược Hỗ Trợ', 'Linh Thảo, Dược Liệu'],
-  'phap-bao': ['Công Kích Pháp Bảo', 'Hộ Thân Pháp Bảo', 'Không Gian Pháp Bảo', 'Ngự Không Pháp Bảo'],
+  'phap-bao': ['Công Kích Pháp Bảo', 'Hộ Thân Pháp Bảo', 'Ngự Không Pháp Bảo', 'Không Gian Pháp Bảo'],
   'linh-vat': ['Linh Sủng, Yêu Thú', 'Linh Tài, Tạp Vật']
 };
 
@@ -173,7 +173,7 @@ async function renderSellerView() {
                   <option value="cong-phap">Công Pháp & Bí Tịch</option>
                   <option value="dan-duoc">Đan Dược & Linh Thảo</option>
                   <option value="phap-bao">Pháp Bảo & Binh Khí</option>
-                  <option value="linh-vat">Linh Vật</option>
+                  <option value="linh-vat">Bảo Khố Tạp Vật</option>
                 </select>
               </div>
 
@@ -482,7 +482,7 @@ window.openEditProductModal = function(id, encodedProd) {
                 <option value="cong-phap" ${currentCategory === 'cong-phap' ? 'selected' : ''}>Công Pháp & Bí Tịch</option>
                 <option value="dan-duoc" ${currentCategory === 'dan-duoc' ? 'selected' : ''}>Đan Dược & Linh Thảo</option>
                 <option value="phap-bao" ${currentCategory === 'phap-bao' ? 'selected' : ''}>Pháp Bảo & Binh Khí</option>
-                <option value="linh-vat" ${currentCategory === 'linh-vat' ? 'selected' : ''}>Linh Vật</option>
+                <option value="linh-vat" ${currentCategory === 'linh-vat' ? 'selected' : ''}>Bảo Khố Tạp Vật</option>
               </select>
             </div>
 

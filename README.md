@@ -37,7 +37,7 @@ Hệ thống hỗ trợ đăng nhập bằng cả **Đạo Hiệu (Tên đăng n
 | **1** | **`Thiên Thư Các Chủ`** | `congphap@vanbaocac.com` | **`seller123`** | **Công Pháp & Bí Tịch** | Thiên Thư Các | 28 món |
 | **2** | **`Bách Thảo Đan Vương`** | `danduoc@vanbaocac.com` | **`seller123`** | **Đan Dược & Linh Thảo** | Bách Thảo Đan Các | 21 món |
 | **3** | **`Vạn Kiếm Tông Chủ`** | `phapbao@vanbaocac.com` | **`seller123`** | **Pháp Bảo & Binh Khí** | Vạn Kiếm Luyện Khí Phủ | 23 món |
-| **4** | **`Vạn Thú Trang Chủ`** | `linhvat@vanbaocac.com` | **`seller123`** | **Linh Vật** | Vạn Thú Sơn Trang | 10 món |
+| **4** | **`Vạn Thú Trang Chủ`** | `linhvat@vanbaocac.com` | **`seller123`** | **Bảo Khố Tạp Vật** | Vạn Thú Sơn Trang | 10 món |
 
 > 💡 **Ghi chú**: Đạo hữu có thể dùng **Tên Đăng Nhập** (ví dụ: `Thiên Thư Các Chủ`) hoặc **Email** (ví dụ: `congphap@vanbaocac.com`) kèm mật khẩu `seller123` để đăng nhập vào Động Phủ Luyện Chế quản lý danh mục tương ứng.
 
