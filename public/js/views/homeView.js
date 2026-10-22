@@ -85,9 +85,9 @@ async function renderHomeView() {
               <!-- Content -->
               <div class="p-4 flex-1 flex flex-col justify-between">
                 <div>
-                  <div class="text-[11px] text-emerald-400/80 font-medium line-clamp-1 mb-1 flex items-center gap-1">
-                    <i class="fa-solid fa-cauldron text-[10px]"></i>
-                    <span>${product.seller?.dongPhu || 'Thanh Vân Động'}</span>
+                  <div class="text-[11px] text-emerald-400/90 font-medium line-clamp-1 mb-1 flex items-center gap-1.5">
+                    <i class="fa-solid fa-tag text-[10px] text-emerald-400/70"></i>
+                    <span>${product.subCategory || 'Bảo Khố'}</span>
                   </div>
 
                   <h3 onclick="window.navigateToProduct('${product._id}')" class="font-cinzel text-base font-bold text-slate-100 hover:text-emerald-400 transition cursor-pointer line-clamp-1">

@@ -81,19 +81,18 @@ function renderUserModal() {
             </button>
           </div>
 
-          <!-- NÚT KHO ĐỒ TU SĨ (BẤM VÀO NHẢY VÀO TRANG RIÊNG) -->
+          <!-- NÚT KHÔNG GIAN TRỮ VẬT (BẤM VÀO NHẢY VÀO TRANG RIÊNG) -->
           <a href="#inventory" onclick="window.closeUserSidebar()" class="flex items-center justify-between p-3.5 rounded-2xl bg-gradient-to-r from-emerald-950/60 to-slate-900 border border-emerald-500/50 hover:border-emerald-400 text-slate-100 hover:text-emerald-300 transition group mb-4 shadow-xl">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg border border-emerald-500/30 group-hover:scale-105 transition">
                 🎒
               </div>
               <div>
-                <div class="text-sm font-bold font-cinzel text-emerald-300 group-hover:text-emerald-200">Kho Đồ Tu Sĩ</div>
-                <div class="text-[11px] text-slate-400">Bảo vật đã sở hữu (ảnh & tên)</div>
+                <div class="text-sm font-bold font-cinzel text-emerald-300 group-hover:text-emerald-200">Không gian trữ vật</div>
               </div>
             </div>
             <div class="flex items-center space-x-1.5 text-xs text-emerald-400 font-semibold">
-              <span>Vào Kho</span>
+              <span>Mở Ra</span>
               <i class="fa-solid fa-arrow-right text-[11px] group-hover:translate-x-1 transition"></i>
             </div>
           </a>

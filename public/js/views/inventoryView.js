@@ -1,5 +1,5 @@
-// Trang Kho Đồ Tu Sĩ (Túi Trữ Vật & Pháp Bảo Đã Sở Hữu)
-// Ảnh đồng bộ trực tiếp từ kho bán hàng (live product data), hiện hết hàng khi stock = 0
+// Trang Không Gian Trữ Vật (Túi Trữ Vật & Pháp Bảo Đã Sở Hữu)
+// Yêu cầu: "Đổi tên Kho đồ tu sĩ thành Không gian trữ vật và bỏ dòng chú thích bên dưới."
 async function renderInventoryView() {
   const container = document.getElementById('main-content');
   if (!container) return;
@@ -7,7 +7,7 @@ async function renderInventoryView() {
   container.innerHTML = `
     <div class="max-w-6xl mx-auto px-4 py-20 text-center text-emerald-400">
       <i class="fa-solid fa-spinner fa-spin text-3xl"></i>
-      <p class="mt-3 font-cinzel text-sm">Đang mở phong ấn túi trữ vật càn khôn...</p>
+      <p class="mt-3 font-cinzel text-sm">Đang mở phong ấn không gian trữ vật...</p>
     </div>
   `;
 
@@ -38,9 +38,9 @@ async function renderInventoryView() {
           <div class="w-20 h-20 rounded-2xl bg-slate-900 border border-slate-800 text-3xl mx-auto flex items-center justify-center mb-4 text-slate-500">
             🎒
           </div>
-          <h2 class="font-cinzel text-2xl font-bold text-slate-100">Kho Đồ Trống Rỗng</h2>
+          <h2 class="font-cinzel text-2xl font-bold text-slate-100">Không Gian Trữ Vật Trống Rỗng</h2>
           <p class="text-xs text-slate-400 mt-2 mb-6">
-            Đạo hữu hiện chưa thu nạp bảo vật nào vào túi trữ vật càn khôn.
+            Đạo hữu hiện chưa thu nạp bảo vật nào vào không gian trữ vật.
           </p>
           <a href="#category/all" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-slate-950 font-bold text-xs uppercase tracking-wider transition inline-flex items-center gap-2">
             <i class="fa-solid fa-compass"></i>
@@ -130,17 +130,14 @@ async function renderInventoryView() {
                 <span>✨</span> Túi Trữ Vật Càn Khôn
               </div>
               <h1 class="font-cinzel text-2xl sm:text-3xl font-extrabold text-slate-100">
-                Kho Đồ Tu Sĩ
+                Không gian trữ vật
               </h1>
-              <p class="text-xs text-slate-400 mt-0.5">
-                Nơi cất giữ toàn bộ kỳ trân dị bảo mà đạo hữu đã sở hữu trong nhân gian
-              </p>
             </div>
           </div>
 
           <div class="px-4 py-2 rounded-2xl bg-slate-900/90 border border-slate-800 text-xs text-slate-300 flex items-center gap-2 self-start sm:self-auto">
             <span class="text-emerald-400 font-bold">${items.length}</span>
-            <span>Bảo vật trong kho</span>
+            <span>Bảo vật trong túi</span>
           </div>
         </div>
 

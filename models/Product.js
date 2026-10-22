@@ -35,7 +35,7 @@ const productSchema = new mongoose.Schema({
   grade: {
     type: String,
     required: [true, 'Phẩm cấp bảo vật không được để trống'],
-    enum: ['Hoang', 'Huyen', 'Dia', 'Thien']
+    enum: ['Hoang', 'Huyen', 'Dia', 'Thien', 'Tien']
   },
   stock: {
     type: Number,

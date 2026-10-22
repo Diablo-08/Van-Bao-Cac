@@ -104,13 +104,13 @@ async function renderProductDetailView(productId) {
           <div class="flex flex-col justify-between">
             <div>
               
-              <!-- Động Phủ Luyện Chế / Seller (Theo đặc tả) & Nút Sửa Bảo Vật cho Admin/Seller -->
+              <!-- Phân Mục Của Bảo Vật & Nút Sửa Bảo Vật cho Admin/Seller -->
               <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
                 <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-emerald-400">
-                  <i class="fa-solid fa-cauldron"></i>
-                  <span>Luyện Chế:</span>
-                  <strong class="text-slate-200">${product.seller?.dongPhu || 'Thần Luyện Động Phủ'}</strong>
-                  <span class="text-slate-500">(${product.seller?.name || 'Đại Sư'})</span>
+                  <i class="fa-solid fa-scroll text-emerald-400"></i>
+                  <span>Phân Mục:</span>
+                  <strong class="text-slate-100">${product.subCategory || 'Bảo Khố'}</strong>
+                  ${product.subType ? `<span class="text-slate-400 text-[11px]">(${product.subType})</span>` : ''}
                 </div>
 
                 ${(window.store.user && (window.store.user.role === 'admin' || (product.seller && ((product.seller._id || product.seller).toString() === window.store.user._id.toString())))) ? `
