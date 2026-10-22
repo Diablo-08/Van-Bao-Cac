@@ -221,12 +221,14 @@ router.put('/:id', authenticate, requireRole('seller', 'admin'), async (req, res
       return res.status(403).json({ success: false, message: 'Đạo hữu không có quyền chỉnh sửa bảo vật của động phủ khác!' });
     }
 
-    const { name, description, lore, price, category, grade, stock, image } = req.body;
+    const { name, description, lore, price, category, subCategory, subType, grade, stock, image } = req.body;
     if (name) product.name = name.trim();
     if (description) product.description = description.trim();
     if (lore !== undefined) product.lore = lore;
     if (price !== undefined) product.price = Math.max(1, parseInt(price, 10));
     if (category) product.category = category;
+    if (subCategory !== undefined) product.subCategory = subCategory.trim();
+    if (subType !== undefined) product.subType = subType.trim();
     if (grade) product.grade = grade;
     if (stock !== undefined) product.stock = Math.max(0, parseInt(stock, 10));
     if (image !== undefined) product.image = image.trim();
