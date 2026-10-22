@@ -107,8 +107,9 @@ async function renderSellerView() {
         <!-- Header -->
         <div class="p-6 sm:p-8 rounded-3xl bg-gradient-to-r from-slate-950 via-slate-900 to-cyan-950/40 border border-cyan-500/40 shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold mb-2 uppercase tracking-wider">
-              🏰 Động Phủ Luyện Chế
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-950/70 border border-cyan-400 text-cyan-300 text-xs font-bold mb-3 uppercase tracking-wider shadow-[0_0_15px_rgba(6,182,212,0.45)] ring-1 ring-cyan-400/50">
+              <span class="animate-pulse">🏰</span>
+              <span>Động Phủ Luyện Chế</span>
             </div>
             <h1 class="font-cinzel text-2xl sm:text-3xl font-black text-slate-100">
               Quản Lý Gian Hàng & Lò Luyện
@@ -118,11 +119,18 @@ async function renderSellerView() {
             </p>
           </div>
 
-          <!-- Quick Stats -->
-          <div class="flex items-center gap-4">
-            <div class="text-right">
-              <div class="text-[11px] text-slate-400 uppercase">Doanh Thu Thu Được</div>
-              <div class="text-xl font-bold text-amber-300 font-cinzel">💎 ${totalEarned.toLocaleString('vi-VN')} <span class="text-xs text-amber-400">LT</span></div>
+          <!-- Quick Stats: Doanh Thu -->
+          <div class="flex items-center">
+            <div class="px-5 py-3 rounded-2xl bg-slate-900/90 border border-amber-500/40 shadow-lg shadow-amber-500/10 text-right">
+              <div class="text-[11px] text-amber-400/90 font-bold uppercase tracking-wider mb-1 flex items-center justify-end gap-1.5">
+                <i class="fa-solid fa-coins text-amber-400 text-xs"></i>
+                <span>Doanh Thu Thu Được</span>
+              </div>
+              <div class="text-2xl sm:text-3xl font-black text-yellow-300 font-cinzel flex items-center justify-end gap-2 drop-shadow-[0_0_12px_rgba(253,224,71,0.4)]">
+                <span class="text-2xl animate-pulse drop-shadow-[0_0_10px_rgba(245,158,11,0.9)]">💎</span>
+                <span>${window.formatScientificOrLocale(totalEarned)}</span>
+                <span class="text-xs sm:text-sm font-sans font-bold text-amber-400">LT</span>
+              </div>
             </div>
           </div>
         </div>

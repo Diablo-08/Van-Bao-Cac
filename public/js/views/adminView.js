@@ -83,8 +83,8 @@ async function renderAdminView() {
           </div>
         </div>
 
-        <!-- 5 Thẻ Thống Kê Tổng Quan -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <!-- 4 Thẻ Thống Kê Tổng Quan -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
           
           <!-- Khung Tổng Tu Sĩ: Chú thích chỉ hiển thị số Buyers -->
           <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
@@ -123,17 +123,6 @@ async function renderAdminView() {
             </div>
             <div class="text-xs text-slate-400 font-medium">
               ${stats.totalOrders || 0} giao dịch
-            </div>
-          </div>
-
-          <!-- Khung Doanh Thu: Dùng ký hiệu khoa học khi vượt quá 10 triệu -->
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
-            <div class="text-xs sm:text-sm text-purple-400 uppercase tracking-wider font-bold">Tổng Doanh Thu</div>
-            <div class="text-2xl sm:text-3xl font-black text-purple-300 font-cinzel my-2 truncate" title="${(stats.totalRevenue || 0).toLocaleString('vi-VN')}">
-              💎 ${window.formatScientificOrLocale(stats.totalRevenue || 0)}
-            </div>
-            <div class="text-xs text-slate-400 font-medium">
-              Toàn tông môn
             </div>
           </div>
 
