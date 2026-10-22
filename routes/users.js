@@ -25,8 +25,29 @@ router.post('/recharge', authenticate, async (req, res) => {
       });
     }
 
+    // Giới hạn Linh Thạch cho người dùng tối đa là 1.000.000
+    const MAX_USER_LINH_THACH = 1000000;
+    const currentLinhThach = req.user.linhThach || 0;
+
+    if (req.user.role !== 'admin') {
+      if (currentLinhThach >= MAX_USER_LINH_THACH) {
+        return res.status(400).json({
+          success: false,
+          message: 'Đan điền tu sĩ đã đạt giới hạn tối đa (1.000.000 Linh Thạch)! Không thể tích trữ thêm.'
+        });
+      }
+
+      if (currentLinhThach + numAmount > MAX_USER_LINH_THACH) {
+        const maxAllowed = MAX_USER_LINH_THACH - currentLinhThach;
+        return res.status(400).json({
+          success: false,
+          message: `Giới hạn Linh Thạch tối đa cho người dùng là 1.000.000! Đạo hữu chỉ có thể nạp thêm tối đa ${maxAllowed.toLocaleString('vi-VN')} Linh Thạch.`
+        });
+      }
+    }
+
     // Cộng dồn Linh Thạch vào tài khoản
-    req.user.linhThach = (req.user.linhThach || 0) + numAmount;
+    req.user.linhThach = currentLinhThach + numAmount;
     await req.user.save();
 
     return res.json({

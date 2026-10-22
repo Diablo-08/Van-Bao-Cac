@@ -61,6 +61,7 @@ function renderRechargeModal(suggestedAmount = null) {
                      id="recharge-amount" 
                      name="amount" 
                      min="10" 
+                     max="1000000"
                      step="10" 
                      value="${defaultAmount}" 
                      required 
@@ -68,6 +69,10 @@ function renderRechargeModal(suggestedAmount = null) {
               <div class="absolute left-3.5 top-3.5 text-amber-400 text-base">
                 💎
               </div>
+            </div>
+            <div class="text-[11px] text-amber-400/90 mt-1.5 flex items-center gap-1 font-medium">
+              <i class="fa-solid fa-circle-info text-[10px]"></i>
+              <span>Giới hạn tích trữ đan điền tối đa: 1.000.000 Linh Thạch.</span>
             </div>
 
             <!-- Nút chọn nhanh số lượng -->
@@ -145,10 +150,21 @@ window.closeRechargeModal = function() {
 window.handleRechargeSubmit = async function(e) {
   e.preventDefault();
   const form = e.target;
-  const amount = form.amount.value;
+  const amount = Number(form.amount.value);
   const secretCode = form.secretCode.value;
   const btn = document.getElementById('recharge-btn');
   const msgBox = document.getElementById('recharge-msg');
+
+  const user = window.store.user;
+  const currentBalance = user ? (user.linhThach || 0) : 0;
+  if (user && user.role !== 'admin' && currentBalance + amount > 1000000) {
+    const maxAllowed = Math.max(0, 1000000 - currentBalance);
+    msgBox.className = 'text-xs p-3 rounded-xl bg-rose-950/60 border border-rose-500 text-rose-300 flex items-center gap-2';
+    msgBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-sm"></i> <span>Giới hạn tối đa là 1.000.000 Linh Thạch! Đạo hữu chỉ có thể nạp thêm tối đa ${maxAllowed.toLocaleString('vi-VN')} Linh Thạch.</span>`;
+    msgBox.classList.remove('hidden');
+    window.showToast(`Chỉ có thể nạp thêm tối đa ${maxAllowed.toLocaleString('vi-VN')} Linh Thạch!`, 'error');
+    return;
+  }
 
   btn.disabled = true;
   btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang quán thông linh khí...`;

@@ -78,3 +78,12 @@ class Store {
 }
 
 window.store = new Store();
+
+// Hàm định dạng số Linh Thạch / Doanh Thu: Khi vượt quá 10 triệu dùng ký hiệu khoa học
+window.formatScientificOrLocale = function(val) {
+  const num = Number(val) || 0;
+  if (num > 10000000) {
+    return num.toExponential(2);
+  }
+  return num.toLocaleString('vi-VN');
+};

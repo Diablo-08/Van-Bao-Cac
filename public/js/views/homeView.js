@@ -176,13 +176,13 @@ async function renderHomeView() {
               <span class="animate-pulse">✨</span> Tông Môn Đấu Giá Bảo Khố Vạn Cổ
             </div>
 
-            <h1 class="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-black text-slate-100 leading-tight">
-              Khai Mở Kỳ Trân <br/>
-              <span class="shimmer-text">Trấn Sơn Bảo Vật</span>
+            <h1 class="font-cinzel text-3xl sm:text-4xl lg:text-5xl font-black text-slate-100 leading-snug sm:leading-normal">
+              <span>Khai Mở Kỳ Trân</span>
+              <span class="block mt-2 sm:mt-3 shimmer-text">Trấn Sơn Bảo Vật</span>
             </h1>
 
-            <p class="text-sm sm:text-base text-slate-300 mt-3 font-normal leading-relaxed">
-              Vạn Bảo Các quy tụ bốn đại phân loại: Công Pháp Vô Thượng, Nghịch Thiên Linh Đan, Thần Binh Tuyệt Thế và Dị Chủng Thần Thú. Giao dịch thuận tiện tức thì bằng bản nguyên <strong>Linh Thạch</strong>.
+            <p class="text-sm sm:text-base text-slate-300 mt-4 font-normal leading-relaxed">
+              Nơi quy tụ bốn đại kỳ bảo chấn động tam giới: Công Pháp Vô Thượng, Nghịch Thiên Linh Đan, Thần Binh Tuyệt Thế và Dị Chủng Thần Thú. Mọi giao dịch tại Vạn Bảo Các đều được ấn định tức thì bằng bản nguyên <strong>Linh Thạch</strong>.
             </p>
 
             <div class="mt-6 flex flex-wrap items-center gap-3">

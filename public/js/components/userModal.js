@@ -65,7 +65,7 @@ function renderUserModal() {
             <div class="text-xs uppercase tracking-wider text-amber-400/80 font-medium">Tài Nguyên Bản Thân</div>
             <div class="flex items-baseline space-x-2 my-2">
               <span class="text-3xl font-extrabold text-amber-300 font-cinzel tracking-wider">
-                ${(user.linhThach || 0).toLocaleString('vi-VN')}
+                ${window.formatScientificOrLocale(user.linhThach || 0)}
               </span>
               <span class="text-sm font-semibold text-amber-400">Linh Thạch</span>
             </div>

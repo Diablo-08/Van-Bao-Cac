@@ -538,6 +538,11 @@ window.openEditProductModal = function(id, encodedProd) {
             <textarea name="description" rows="3" required class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">${p.description || ''}</textarea>
           </div>
 
+          <div>
+            <label class="block text-xs text-slate-300 font-semibold mb-1">Biến Cố & Lai Lịch (Điển cố / Lore)</label>
+            <textarea name="lore" rows="2" placeholder="Nguồn gốc rèn đúc, truyền thuyết hoặc biến cố gắn liền với bảo vật..." class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">${p.lore || ''}</textarea>
+          </div>
+
           <div class="flex justify-end gap-2 pt-2">
             <button type="button" onclick="document.getElementById('edit-product-modal').remove()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 text-xs font-semibold transition">
               Hủy
@@ -576,6 +581,7 @@ window.handleUpdateProductSubmit = async function(e, id) {
     price: form.price.value,
     stock: form.stock.value,
     description: form.description.value.trim(),
+    lore: form.lore ? form.lore.value.trim() : '',
     image: form.image.value.trim(),
     category: form.category ? form.category.value : undefined,
     subCategory: form.subCategory ? form.subCategory.value : undefined,

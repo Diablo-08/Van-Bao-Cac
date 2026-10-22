@@ -19,65 +19,11 @@ let fallbackData = {
   orders: []
 };
 
-function remapGradeValue(grade) {
-  if (grade === 'Thien') return 'Tien';
-  return grade;
-}
-
-function remapCollectionGrades(items) {
-  if (!Array.isArray(items)) return;
-  items.forEach((item) => {
-    if (item && item.grade) {
-      item.grade = remapGradeValue(item.grade);
-    }
-    if (item && Array.isArray(item.items)) {
-      item.items.forEach((orderItem) => {
-        if (orderItem && orderItem.grade) {
-          orderItem.grade = remapGradeValue(orderItem.grade);
-        }
-      });
-    }
-  });
-}
-
-async function migrateProductGrades() {
-  try {
-    const col = ProductModel.collection;
-    const orderCol = OrderModel.collection;
-    const thienCount = await col.countDocuments({ grade: 'Thien' });
-    if (thienCount === 0) return;
-
-    await col.updateMany({ grade: 'Thien' }, { $set: { grade: 'Tien' } });
-    await col.updateMany({ grade: 'Hoang' }, { $set: { grade: '__tmp_huyen__' } });
-    await col.updateMany({ grade: 'Huyen' }, { $set: { grade: 'Hoang' } });
-    await col.updateMany({ grade: '__tmp_huyen__' }, { $set: { grade: 'Huyen' } });
-
-    await orderCol.updateMany({ 'items.grade': 'Thien' }, { $set: { 'items.$[g].grade': 'Tien' } }, {
-      arrayFilters: [{ 'g.grade': 'Thien' }]
-    });
-    await orderCol.updateMany({ 'items.grade': 'Hoang' }, { $set: { 'items.$[g].grade': '__tmp_huyen__' } }, {
-      arrayFilters: [{ 'g.grade': 'Hoang' }]
-    });
-    await orderCol.updateMany({ 'items.grade': 'Huyen' }, { $set: { 'items.$[g].grade': 'Hoang' } }, {
-      arrayFilters: [{ 'g.grade': 'Huyen' }]
-    });
-    await orderCol.updateMany({ 'items.grade': '__tmp_huyen__' }, { $set: { 'items.$[g].grade': 'Huyen' } }, {
-      arrayFilters: [{ 'g.grade': '__tmp_huyen__' }]
-    });
-
-    console.log(`✨ Đã chuẩn hóa phẩm cấp: Huyền < Hoàng < Địa < Tiên (${thienCount} bảo vật Thiên → Tiên).`);
-  } catch (err) {
-    console.warn('⚠️ Không thể chuẩn hóa phẩm cấp trên MongoDB:', err.message);
-  }
-}
-
 function loadFallbackData() {
   try {
     if (fs.existsSync(DATA_FILE)) {
       const raw = fs.readFileSync(DATA_FILE, 'utf8');
       fallbackData = JSON.parse(raw);
-      remapCollectionGrades(fallbackData.products);
-      remapCollectionGrades(fallbackData.orders);
     } else {
       saveFallbackData();
     }
@@ -367,7 +313,6 @@ async function connectDB() {
     });
     isConnectedToMongo = true;
     console.log('✨ [Vạn Bảo Các] Kết nối MongoDB Atlas thành công! Linh khí dồi dào.');
-    await migrateProductGrades();
   } catch (err) {
     console.warn(`⚠️ [Vạn Bảo Các] Không thể kết nối MongoDB Atlas (${err.message}). Tự động kích hoạt Bộ Lưu Trữ Thần Bí (JSON Database) để đảm bảo hệ thống luôn hoạt động.`);
     loadFallbackData();

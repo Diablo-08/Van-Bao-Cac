@@ -56,7 +56,7 @@ function renderNavbar() {
           <div class="flex items-center bg-slate-900/90 border border-amber-500/40 rounded-full px-3 py-1.5 shadow-md shadow-amber-500/10">
             <span class="text-amber-400 text-sm mr-1.5 animate-pulse">💎</span>
             <span class="text-amber-200 font-bold text-xs sm:text-sm tracking-wide" id="nav-linh-thach">
-              ${(user.linhThach || 0).toLocaleString('vi-VN')}
+              ${window.formatScientificOrLocale(user.linhThach || 0)}
             </span>
             <span class="text-[11px] text-amber-400/80 ml-1 hidden sm:inline">Linh Thạch</span>
             <button onclick="window.openRechargeModal()" title="Nạp Thêm Linh Thạch" class="ml-2 w-5 h-5 rounded-full bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black flex items-center justify-center text-xs font-bold transition">

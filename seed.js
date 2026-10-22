@@ -225,13 +225,72 @@ async function runSeed() {
     console.log(`👑 Đã tìm thấy Admin hiện hữu: ${admin.name} (${admin._id})`);
   }
 
-  // 2. Gán seller là Admin Bất Giới
+  // 2. Tạo hoặc đồng bộ 4 tài khoản Seller chuyên biệt cho 4 danh mục
+  const sellersConfig = [
+    {
+      category: 'cong-phap',
+      name: 'Thiên Thư Các Chủ',
+      email: 'congphap@vanbaocac.com',
+      password: 'seller123',
+      dongPhu: 'Thiên Thư Các'
+    },
+    {
+      category: 'dan-duoc',
+      name: 'Bách Thảo Đan Vương',
+      email: 'danduoc@vanbaocac.com',
+      password: 'seller123',
+      dongPhu: 'Bách Thảo Đan Các'
+    },
+    {
+      category: 'phap-bao',
+      name: 'Vạn Kiếm Tông Chủ',
+      email: 'phapbao@vanbaocac.com',
+      password: 'seller123',
+      dongPhu: 'Vạn Kiếm Luyện Khí Phủ'
+    },
+    {
+      category: 'linh-vat',
+      name: 'Vạn Thú Trang Chủ',
+      email: 'linhvat@vanbaocac.com',
+      password: 'seller123',
+      dongPhu: 'Vạn Thú Sơn Trang'
+    }
+  ];
+
+  const sellerMap = {};
+  for (const cfg of sellersConfig) {
+    let seller = await User.findOne({ email: cfg.email });
+    const hashedPassword = await bcrypt.hash(cfg.password, 10);
+    const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(cfg.name)}`;
+
+    if (!seller) {
+      seller = await User.create({
+        name: cfg.name,
+        email: cfg.email,
+        password: hashedPassword,
+        role: 'seller',
+        dongPhu: cfg.dongPhu,
+        linhThach: 50000,
+        avatar
+      });
+      console.log(`🏪 Đã tạo mới Seller [${cfg.name}] phụ trách [${cfg.category}]`);
+    } else {
+      seller.role = 'seller';
+      seller.dongPhu = cfg.dongPhu;
+      seller.avatar = avatar;
+      await seller.save();
+      console.log(`🏪 Đã đồng bộ Seller [${seller.name}] (${seller._id})`);
+    }
+    sellerMap[cfg.category] = seller._id;
+  }
+
+  // 3. Gán seller tương ứng cho từng sản phẩm theo category
   const productsWithSeller = ALL_PRODUCTS_DATA.map(item => ({
     ...item,
-    seller: admin._id
+    seller: sellerMap[item.category] || admin._id
   }));
 
-  // 3. Xóa toàn bộ bảo vật cũ và thêm toàn bộ bảo vật mới
+  // 4. Xóa toàn bộ bảo vật cũ và thêm toàn bộ bảo vật mới
   if (isMongo()) {
     await ProductModel.deleteMany({});
     const inserted = await ProductModel.insertMany(productsWithSeller);

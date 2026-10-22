@@ -50,7 +50,7 @@ async function renderAdminView() {
           <i class="fa-solid fa-cauldron mr-1"></i>${s.dongPhu || 'Thần Luyện Động Phủ'}
         </td>
         <td class="py-3 px-4 text-xs font-cinzel font-bold text-amber-400">
-          💎 ${(s.linhThach || 0).toLocaleString('vi-VN')}
+          💎 ${window.formatScientificOrLocale(s.linhThach || 0)}
         </td>
         <td class="py-3 px-4 text-[11px] text-slate-400">
           ${new Date(s.createdAt).toLocaleDateString('vi-VN')}
@@ -83,46 +83,57 @@ async function renderAdminView() {
           </div>
         </div>
 
-        <!-- 4 Thẻ Thống Kê Tổng Quan -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- 5 Thẻ Thống Kê Tổng Quan -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-            <div class="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Tổng Tu Sĩ</div>
-            <div class="text-2xl font-black text-slate-100 font-cinzel my-1">
+          <!-- Khung Tổng Tu Sĩ: Chú thích chỉ hiển thị số Buyers -->
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
+            <div class="text-xs sm:text-sm text-slate-300 uppercase tracking-wider font-bold">Tổng Tu Sĩ</div>
+            <div class="text-3xl sm:text-4xl font-black text-slate-100 font-cinzel my-2">
               ${stats.totalUsers || 0}
             </div>
-            <div class="text-[10px] text-emerald-400">
-              ${stats.totalBuyers || 0} Buyer • ${stats.totalSellers || 0} Seller
+            <div class="text-xs text-emerald-400 font-semibold">
+              ${stats.totalBuyers || 0} Buyers
             </div>
           </div>
 
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-            <div class="text-[11px] text-cyan-400 uppercase tracking-wider font-semibold">Động Chủ Seller</div>
-            <div class="text-2xl font-black text-cyan-300 font-cinzel my-1">
+          <!-- Khung Động Chủ Seller: Đã bỏ chú thích, tăng size chữ -->
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
+            <div class="text-xs sm:text-sm text-cyan-400 uppercase tracking-wider font-bold">Động Chủ Seller</div>
+            <div class="text-3xl sm:text-4xl font-black text-cyan-300 font-cinzel my-2">
               ${stats.totalSellers || 0}
             </div>
-            <div class="text-[10px] text-slate-400">
-              Số lượng Seller
-            </div>
+            <div></div>
           </div>
 
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-            <div class="text-[11px] text-amber-400 uppercase tracking-wider font-semibold">Tổng Bảo Vật</div>
-            <div class="text-2xl font-black text-amber-300 font-cinzel my-1">
+          <!-- Khung Tổng Bảo Vật: Đã bỏ chú thích, tăng size chữ -->
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
+            <div class="text-xs sm:text-sm text-amber-400 uppercase tracking-wider font-bold">Tổng Bảo Vật</div>
+            <div class="text-3xl sm:text-4xl font-black text-amber-300 font-cinzel my-2">
               ${stats.totalProducts || 0}
             </div>
-            <div class="text-[10px] text-slate-400">
-              Phủ khắp 4 đại danh mục
+            <div></div>
+          </div>
+
+          <!-- Khung Linh Thạch Lưu Thông: Dùng ký hiệu khoa học khi vượt quá 10 triệu -->
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
+            <div class="text-xs sm:text-sm text-emerald-400 uppercase tracking-wider font-bold">Linh Thạch Lưu Thông</div>
+            <div class="text-2xl sm:text-3xl font-black text-emerald-300 font-cinzel my-2 truncate" title="${(stats.totalLinhThachCirculating || 0).toLocaleString('vi-VN')}">
+              💎 ${window.formatScientificOrLocale(stats.totalLinhThachCirculating || 0)}
+            </div>
+            <div class="text-xs text-slate-400 font-medium">
+              ${stats.totalOrders || 0} giao dịch
             </div>
           </div>
 
-          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
-            <div class="text-[11px] text-emerald-400 uppercase tracking-wider font-semibold">Linh Thạch Lưu Thông</div>
-            <div class="text-2xl font-black text-emerald-300 font-cinzel my-1">
-              💎 ${(stats.totalLinhThachCirculating || 0).toLocaleString('vi-VN')}
+          <!-- Khung Doanh Thu: Dùng ký hiệu khoa học khi vượt quá 10 triệu -->
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800 flex flex-col justify-between">
+            <div class="text-xs sm:text-sm text-purple-400 uppercase tracking-wider font-bold">Tổng Doanh Thu</div>
+            <div class="text-2xl sm:text-3xl font-black text-purple-300 font-cinzel my-2 truncate" title="${(stats.totalRevenue || 0).toLocaleString('vi-VN')}">
+              💎 ${window.formatScientificOrLocale(stats.totalRevenue || 0)}
             </div>
-            <div class="text-[10px] text-slate-400">
-              ${stats.totalOrders || 0} lượt giao dịch thành công
+            <div class="text-xs text-slate-400 font-medium">
+              Toàn tông môn
             </div>
           </div>
 
