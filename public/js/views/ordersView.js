@@ -88,8 +88,8 @@ async function renderOrdersView() {
         <div class="flex items-center space-x-3 pb-4 border-b border-slate-800">
           <span class="text-2xl text-blue-400">📜</span>
           <div>
-            <h1 class="font-cinzel text-2xl font-bold text-slate-100">Bảo Vật Đã Tiếp Nhận</h1>
-            <p class="text-xs text-slate-400">Lịch sử giao dịch và pháp bảo đã chuyển đến động phủ của đạo sĩ</p>
+            <h1 class="font-cinzel text-2xl font-bold text-slate-100">Bảo Vật Đã Mua</h1>
+            <p class="text-xs text-slate-400">Các pháp bảo đã giao dịch và chuyển đến động phủ của đạo sĩ</p>
           </div>
         </div>
 

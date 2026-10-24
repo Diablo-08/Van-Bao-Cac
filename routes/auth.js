@@ -200,4 +200,57 @@ router.post('/logout', (req, res) => {
   });
 });
 
+// PUT /api/auth/avatar - Cập nhật avatar (Pháp tướng)
+router.put('/avatar', authenticate, async (req, res) => {
+  try {
+    const { avatar } = req.body;
+    if (!avatar || !avatar.trim()) {
+      return res.status(400).json({ success: false, message: 'Vui lòng cung cấp liên kết ảnh pháp tướng (URL)!' });
+    }
+
+    req.user.avatar = avatar.trim();
+    await req.user.save();
+
+    return res.json({
+      success: true,
+      message: 'Thiên biến vạn hóa! Pháp tướng (Avatar) đã được cập nhật thành công!',
+      avatar: req.user.avatar
+    });
+  } catch (err) {
+    console.error('Lỗi cập nhật avatar:', err);
+    return res.status(500).json({ success: false, message: 'Lỗi cập nhật pháp tướng.' });
+  }
+});
+
+// PUT /api/auth/change-password - Đổi mật khẩu tu luyện
+router.put('/change-password', authenticate, async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Vui lòng điền đủ mật khẩu hiện tại và mật khẩu mới.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu mới phải có tối thiểu 6 ký tự để bảo hộ thần thức.' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, req.user.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: 'Mật khẩu hiện tại không chính xác! Không thể giải trừ phong ấn.' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    req.user.password = hashedPassword;
+    await req.user.save();
+
+    return res.json({
+      success: true,
+      message: 'Khóa ấn tâm pháp đã được tái tạo! Đổi mật khẩu thành công.'
+    });
+  } catch (err) {
+    console.error('Lỗi đổi mật khẩu:', err);
+    return res.status(500).json({ success: false, message: 'Lỗi đổi mật khẩu.' });
+  }
+});
+
 module.exports = router;

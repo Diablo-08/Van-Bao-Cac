@@ -55,6 +55,13 @@ function renderUserModal() {
               <i class="fa-solid fa-mountain-sun"></i>
               <span>Động Phủ: <strong>${user.dongPhu || 'Thanh Vân Động Phủ'}</strong></span>
             </div>
+
+            ${(user.role === 'admin' || user.role === 'seller') ? `
+              <button onclick="window.openEditAvatarModal()" class="mt-3 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-cyan-950/40 border border-slate-800 hover:border-cyan-500/50 text-[11px] font-semibold text-cyan-300 flex items-center gap-1.5 transition cursor-pointer shadow-sm">
+                <i class="fa-solid fa-camera"></i>
+                <span>Chỉnh Sửa Pháp Tướng (Avatar)</span>
+              </button>
+            ` : ''}
           </div>
 
           <!-- Thẻ Số Dư Linh Thạch & Nút Nạp -->
@@ -104,7 +111,7 @@ function renderUserModal() {
                 <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                   <i class="fa-solid fa-cart-shopping text-sm"></i>
                 </div>
-                <span class="text-sm font-medium">Càn Khôn Đại (Giỏ Hàng)</span>
+                <span class="text-sm font-medium">Càn Khôn Đại</span>
               </div>
               <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">
                 ${window.store.cartCount || 0}
@@ -128,10 +135,20 @@ function renderUserModal() {
                 <div class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
                   <i class="fa-solid fa-receipt text-sm"></i>
                 </div>
-                <span class="text-sm font-medium">Bảo Vật Đã Mua (Lịch Sử)</span>
+                <span class="text-sm font-medium">Bảo Vật Đã Mua</span>
               </div>
               <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
             </a>
+
+            <button onclick="window.openChangePasswordModal()" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900/60 hover:bg-slate-800/80 border border-slate-800/80 text-slate-200 hover:text-amber-400 transition cursor-pointer text-left">
+              <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+                  <i class="fa-solid fa-key text-sm"></i>
+                </div>
+                <span class="text-sm font-medium">Đổi Mật Khẩu</span>
+              </div>
+              <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+            </button>
 
             ${user.role === 'admin' ? `
               <a href="#admin" onclick="window.closeUserSidebar()" class="flex items-center justify-between p-3 rounded-xl bg-amber-950/30 hover:bg-amber-900/40 border border-amber-500/40 text-amber-200 transition">
@@ -184,4 +201,214 @@ window.openUserSidebar = renderUserModal;
 window.closeUserSidebar = function() {
   const modal = document.getElementById('user-sidebar-modal');
   if (modal) modal.remove();
+};
+
+// --- MODAL CHỈNH SỬA PHÁP TƯỚNG (AVATAR) CHO TÔNG CHỦ & SELLERS ---
+window.openEditAvatarModal = function() {
+  const existing = document.getElementById('edit-avatar-modal');
+  if (existing) existing.remove();
+
+  const user = window.store.user;
+  const currentAvatar = user ? (user.avatar || '') : '';
+
+  const html = `
+    <div id="edit-avatar-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+      <div class="absolute inset-0 cursor-pointer" onclick="document.getElementById('edit-avatar-modal').remove()"></div>
+      
+      <div class="relative w-full max-w-md bg-slate-950 border border-cyan-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-xl">🎭</span>
+            <h3 class="font-cinzel text-lg font-bold text-slate-100">Đổi Pháp Tướng (Avatar)</h3>
+          </div>
+          <button onclick="document.getElementById('edit-avatar-modal').remove()" class="w-8 h-8 rounded-lg bg-slate-900 text-slate-400 hover:text-white flex items-center justify-center hover:bg-slate-800 transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form onsubmit="window.handleUpdateAvatarSubmit(event)" class="space-y-4">
+          <!-- Preview Avatar -->
+          <div class="flex flex-col items-center justify-center py-2">
+            <div class="w-24 h-24 rounded-full border-2 border-cyan-400 p-1 shadow-lg shadow-cyan-500/20 bg-slate-900 overflow-hidden">
+              <img id="avatar-preview-img" 
+                   src="${currentAvatar || 'https://api.dicebear.com/7.x/bottts/svg?seed=' + (user ? user.name : 'VBC')}" 
+                   class="w-full h-full object-cover rounded-full" 
+                   onerror="this.src='https://api.dicebear.com/7.x/bottts/svg?seed=fallback'" />
+            </div>
+            <span class="text-[11px] text-slate-400 mt-2">Xem trước pháp tướng hiện diện</span>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Liên Kết Ảnh Mới (Image URL) <span class="text-cyan-400">*</span>
+            </label>
+            <input type="url" 
+                   name="avatar" 
+                   id="avatar-url-input" 
+                   required
+                   value="${currentAvatar}" 
+                   placeholder="https://images.unsplash.com/... hoặc link ảnh online" 
+                   oninput="document.getElementById('avatar-preview-img').src = this.value.trim() || 'https://api.dicebear.com/7.x/bottts/svg?seed=preview'"
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition" />
+            <p class="text-[10px] text-slate-500 mt-1">Dán link ảnh trực tiếp (JPG, PNG, GIF, WebP, SVG)</p>
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" onclick="document.getElementById('edit-avatar-modal').remove()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white text-xs font-semibold transition">
+              Hủy Bỏ
+            </button>
+            <button type="submit" id="save-avatar-btn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-slate-950 text-xs font-bold shadow-md shadow-cyan-500/20 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Lưu Pháp Tướng</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', html);
+};
+
+window.handleUpdateAvatarSubmit = async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const avatarUrl = form.avatar.value.trim();
+  const btn = document.getElementById('save-avatar-btn');
+
+  if (!avatarUrl) {
+    window.showToast('Vui lòng nhập link ảnh hợp lệ!', 'error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang quán chiếu...`;
+
+  try {
+    const res = await window.api.updateAvatar(avatarUrl);
+    if (window.store.user) {
+      window.store.user.avatar = res.avatar || avatarUrl;
+    }
+    window.showToast(res.message || 'Cập nhật pháp tướng thành công!', 'success');
+    document.getElementById('edit-avatar-modal')?.remove();
+    
+    // Cập nhật lại giao diện
+    if (window.renderNavbar) window.renderNavbar();
+    if (document.getElementById('user-sidebar-modal')) {
+      window.openUserSidebar();
+    }
+    if (window.store.currentView === 'seller' && window.renderSellerView) {
+      window.renderSellerView();
+    }
+  } catch (err) {
+    window.showToast(err.message || 'Lỗi cập nhật pháp tướng!', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-floppy-disk"></i> <span>Lưu Pháp Tướng</span>`;
+    }
+  }
+};
+
+// --- MODAL ĐỔI MẬT KHẨU ---
+window.openChangePasswordModal = function() {
+  const existing = document.getElementById('change-password-modal');
+  if (existing) existing.remove();
+
+  const html = `
+    <div id="change-password-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+      <div class="absolute inset-0 cursor-pointer" onclick="document.getElementById('change-password-modal').remove()"></div>
+      
+      <div class="relative w-full max-w-md bg-slate-950 border border-amber-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-800">
+          <div class="flex items-center space-x-2.5">
+            <span class="text-xl">🔐</span>
+            <h3 class="font-cinzel text-lg font-bold text-slate-100">Đổi Mật Khẩu Tu Vi</h3>
+          </div>
+          <button onclick="document.getElementById('change-password-modal').remove()" class="w-8 h-8 rounded-lg bg-slate-900 text-slate-400 hover:text-white flex items-center justify-center hover:bg-slate-800 transition">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <form onsubmit="window.handleChangePasswordSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Mật Khẩu Hiện Tại <span class="text-amber-400">*</span>
+            </label>
+            <input type="password" 
+                   name="currentPassword" 
+                   required
+                   placeholder="Nhập mật khẩu hiện tại" 
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 focus:border-amber-400 text-xs text-slate-100 outline-none transition" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Mật Khẩu Mới (Tối thiểu 6 ký tự) <span class="text-amber-400">*</span>
+            </label>
+            <input type="password" 
+                   name="newPassword" 
+                   required
+                   minlength="6"
+                   placeholder="Nhập mật khẩu mới" 
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 focus:border-amber-400 text-xs text-slate-100 outline-none transition" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+              Xác Nhận Mật Khẩu Mới <span class="text-amber-400">*</span>
+            </label>
+            <input type="password" 
+                   name="confirmPassword" 
+                   required
+                   minlength="6"
+                   placeholder="Nhập lại mật khẩu mới" 
+                   class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 focus:border-amber-400 text-xs text-slate-100 outline-none transition" />
+          </div>
+
+          <div class="flex justify-end gap-2 pt-2">
+            <button type="button" onclick="document.getElementById('change-password-modal').remove()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-white text-xs font-semibold transition">
+              Hủy
+            </button>
+            <button type="submit" id="change-pass-btn" class="px-5 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 text-xs font-bold shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition">
+              <i class="fa-solid fa-key"></i>
+              <span>Cập Nhật Mật Khẩu</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', html);
+};
+
+window.handleChangePasswordSubmit = async function(e) {
+  e.preventDefault();
+  const form = e.target;
+  const currentPassword = form.currentPassword.value;
+  const newPassword = form.newPassword.value;
+  const confirmPassword = form.confirmPassword.value;
+  const btn = document.getElementById('change-pass-btn');
+
+  if (newPassword !== confirmPassword) {
+    window.showToast('Xác nhận mật khẩu mới không trùng khớp!', 'error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Đang tái tạo ấn pháp...`;
+
+  try {
+    const res = await window.api.changePassword(currentPassword, newPassword);
+    window.showToast(res.message || 'Đổi mật khẩu thành công!', 'success');
+    document.getElementById('change-password-modal')?.remove();
+  } catch (err) {
+    window.showToast(err.message || 'Lỗi đổi mật khẩu!', 'error');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = `<i class="fa-solid fa-key"></i> <span>Cập Nhật Mật Khẩu</span>`;
+    }
+  }
 };

@@ -203,11 +203,6 @@ async function renderHomeView() {
               </button>
             </div>
           </div>
-
-          <!-- Floating decorative insignia -->
-          <div class="hidden lg:block absolute right-8 pointer-events-none select-none w-40 h-40 rounded-full overflow-hidden opacity-25 animate-pulse">
-            <img src="/images/logo.png" alt="" class="w-full h-full object-cover scale-[1.2]">
-          </div>
         </div>
 
         <!-- 4 DANH MỤC & SẢN PHẨM NỔI BẬT -->

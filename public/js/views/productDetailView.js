@@ -124,7 +124,7 @@ async function renderProductDetailView(productId) {
                   <button onclick="window.openEditProductModal('${product._id}', '${encodeURIComponent(JSON.stringify(product))}')" 
                           class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-950/70 hover:bg-cyan-900 border border-cyan-500/50 text-cyan-300 text-xs font-semibold shadow-md transition cursor-pointer">
                     <i class="fa-solid fa-pen-to-square"></i>
-                    <span>Tu Sửa Bảo Vật & Ảnh</span>
+                    <span>Tu Sửa</span>
                   </button>
                 ` : ''}
               </div>

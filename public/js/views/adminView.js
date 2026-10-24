@@ -75,7 +75,11 @@ async function renderAdminView() {
             </p>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2">
+            <button onclick="window.openEditAvatarModal()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-amber-400 text-amber-300 text-xs font-semibold flex items-center gap-2 transition cursor-pointer">
+              <i class="fa-solid fa-camera"></i>
+              <span>Đổi Pháp Tướng</span>
+            </button>
             <button onclick="window.renderAdminView()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-2 transition">
               <i class="fa-solid fa-arrows-rotate"></i>
               <span>Làm Mới Sổ Bộ</span>

@@ -72,8 +72,8 @@ function renderNavbar() {
             </span>
           </a>
 
-          <!-- Biểu tượng Giỏ Hàng (🛒) - Cart -->
-          <a href="#cart" class="relative p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-slate-300 hover:text-emerald-400 transition group" title="Càn khôn đại (Giỏ hàng)">
+          <!-- Biểu tượng Càn Khôn Đại (🛒) - Cart -->
+          <a href="#cart" class="relative p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 hover:border-emerald-500/50 hover:bg-emerald-950/20 text-slate-300 hover:text-emerald-400 transition group" title="Càn Khôn Đại">
             <i class="fa-solid fa-cart-shopping text-base group-hover:scale-110 transition"></i>
             <span id="nav-cart-badge" class="${window.store.cartCount > 0 ? '' : 'hidden'} absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-emerald-500 text-slate-950 text-[11px] font-bold flex items-center justify-center shadow-lg shadow-emerald-500/50">
               ${window.store.cartCount}

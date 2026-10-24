@@ -120,13 +120,13 @@ async function renderCartView() {
           <div class="flex items-center space-x-3">
             <span class="text-2xl">🛒</span>
             <div>
-              <h1 class="font-cinzel text-2xl font-bold text-slate-100">Càn Khôn Đại (Giỏ Hàng)</h1>
+              <h1 class="font-cinzel text-2xl font-bold text-slate-100">Càn Khôn Đại</h1>
               <p class="text-xs text-slate-400">Danh sách bảo vật đã quy tập chờ xuất kho</p>
             </div>
           </div>
           <button onclick="window.handleClearCart()" class="text-xs text-slate-400 hover:text-rose-400 flex items-center gap-1.5 transition">
             <i class="fa-solid fa-broom"></i>
-            <span>Dọn Sạch Giỏ Hàng</span>
+            <span>Dọn Sạch Càn Khôn Đại</span>
           </button>
         </div>
 
@@ -318,7 +318,7 @@ window.showSuccessModal = function(msg) {
         <div class="flex flex-col gap-2.5 mt-6">
           <button onclick="document.getElementById('checkout-success-modal').remove(); window.store.setView('orders');" 
                   class="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs uppercase tracking-wider transition">
-            <i class="fa-solid fa-receipt mr-1.5"></i>Kiểm Tra Động Phủ (Lịch Sử Đơn Hàng)
+            <i class="fa-solid fa-receipt mr-1.5"></i>Kiểm Tra Động Phủ (Bảo Vật Đã Mua)
           </button>
           
           <button onclick="document.getElementById('checkout-success-modal').remove(); window.store.setView('home');" 

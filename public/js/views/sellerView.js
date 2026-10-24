@@ -8,6 +8,18 @@ const SUBCATEGORIES_MAP = {
   'linh-vat': ['Linh Sủng, Yêu Thú', 'Linh Tài, Tạp Vật']
 };
 
+window.getSellerAllowedCategory = function(user, products = []) {
+  if (!user || user.role === 'admin') return null; // Admin quản lý toàn bộ
+  const email = (user.email || '').toLowerCase();
+  const dongPhu = (user.dongPhu || '').toLowerCase();
+  if (email.includes('congphap') || dongPhu.includes('thiên thư') || dongPhu.includes('thien thu')) return 'cong-phap';
+  if (email.includes('danduoc') || dongPhu.includes('bách thảo') || dongPhu.includes('bach thao')) return 'dan-duoc';
+  if (email.includes('phapbao') || dongPhu.includes('vạn kiếm') || dongPhu.includes('van kiem')) return 'phap-bao';
+  if (email.includes('linhvat') || dongPhu.includes('vạn thú') || dongPhu.includes('van thu')) return 'linh-vat';
+  if (products.length > 0 && products[0].category) return products[0].category;
+  return null;
+};
+
 let currentSellerGradeFilter = 'all';
 
 async function renderSellerView() {
@@ -95,6 +107,17 @@ async function renderSellerView() {
         <td class="py-3 px-4 w-24 max-w-[90px] text-center text-xs font-bold ${p.stock > 0 ? 'text-emerald-400' : 'text-rose-400'}">
           ${p.stock > 0 ? p.stock : '0 (Hết)'}
         </td>
+        <td class="py-3 px-4 text-center w-28">
+          <button onclick="window.handleToggleFeatured('${p._id}', ${!p.isFeatured})" 
+                  title="${p.isFeatured ? 'Đang nổi bật tại Trang Chủ (Bấm để gỡ)' : 'Bấm để hiển thị nổi bật tại Trang Chủ'}"
+                  class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold transition ${
+                    p.isFeatured 
+                      ? 'bg-amber-500/20 text-amber-300 border border-amber-500/50 hover:bg-amber-500/30 shadow-sm shadow-amber-500/20' 
+                      : 'bg-slate-900 text-slate-500 border border-slate-800 hover:text-slate-300 hover:border-slate-700'
+                  }">
+            <span>${p.isFeatured ? '⭐ Nổi Bật' : '☆ Thường'}</span>
+          </button>
+        </td>
         <td class="py-3 px-4 text-right space-x-2">
           <button onclick="window.openEditProductModal('${p._id}', '${encodeURIComponent(JSON.stringify(p))}')" 
                   class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-cyan-950/40 border border-slate-700 text-cyan-300 text-xs font-semibold transition cursor-pointer">
@@ -107,6 +130,14 @@ async function renderSellerView() {
         </td>
       </tr>
     `).join('');
+
+    const sellerAllowedCat = window.getSellerAllowedCategory(user, myProducts);
+    const catOptionsList = [
+      { id: 'cong-phap', name: 'Công Pháp & Bí Tịch' },
+      { id: 'dan-duoc', name: 'Đan Dược & Linh Thảo' },
+      { id: 'phap-bao', name: 'Pháp Bảo & Binh Khí' },
+      { id: 'linh-vat', name: 'Bảo Khố Tạp Vật' }
+    ].filter(c => !sellerAllowedCat || c.id === sellerAllowedCat);
 
     container.innerHTML = `
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -121,8 +152,11 @@ async function renderSellerView() {
             <h1 class="font-cinzel text-2xl sm:text-3xl font-black text-slate-100">
               Quản Lý Gian Hàng & Lò Luyện
             </h1>
-            <p class="text-xs text-slate-400 mt-1">
-              Động Chủ: <strong class="text-slate-200">${user.name}</strong> • Động Phủ: <strong class="text-cyan-400">${user.dongPhu || 'Thần Luyện Động Phủ'}</strong>
+            <p class="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-2">
+              <span>Động Chủ: <strong class="text-slate-200">${user.name}</strong> • Động Phủ: <strong class="text-cyan-400">${user.dongPhu || 'Thần Luyện Động Phủ'}</strong></span>
+              <button onclick="window.openEditAvatarModal()" class="px-2.5 py-0.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-400 text-[11px] text-cyan-300 font-semibold transition cursor-pointer">
+                <i class="fa-solid fa-camera mr-1"></i>Đổi Avatar
+              </button>
             </p>
           </div>
 
@@ -177,10 +211,7 @@ async function renderSellerView() {
                   Danh Mục <span class="text-cyan-400">*</span>
                 </label>
                 <select name="category" required onchange="window.updateCreateSubCategories(this.value)" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">
-                  <option value="cong-phap">Công Pháp & Bí Tịch</option>
-                  <option value="dan-duoc">Đan Dược & Linh Thảo</option>
-                  <option value="phap-bao">Pháp Bảo & Binh Khí</option>
-                  <option value="linh-vat">Bảo Khố Tạp Vật</option>
+                  ${catOptionsList.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
                 </select>
               </div>
 
@@ -281,7 +312,12 @@ async function renderSellerView() {
                         class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition"></textarea>
             </div>
 
-            <div class="flex justify-end pt-2">
+            <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+              <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+                <input type="checkbox" name="isFeatured" class="w-4 h-4 rounded text-amber-500 bg-slate-950 border-slate-700" />
+                <span class="text-xs font-semibold text-amber-300">⭐ Đặt làm Bảo vật Nổi bật (Hiển thị tại Trang Chủ)</span>
+              </label>
+
               <button type="submit" 
                       id="create-prod-btn" 
                       class="py-2.5 px-6 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-slate-950 font-bold text-xs uppercase tracking-wider shadow-lg shadow-cyan-500/20 flex items-center gap-2 cursor-pointer transition">
@@ -338,13 +374,14 @@ async function renderSellerView() {
                   <th class="py-2.5 px-4 w-36 min-w-[120px]">Phẩm Cấp</th>
                   <th class="py-2.5 px-4 w-44 min-w-[150px]">Đơn Giá</th>
                   <th class="py-2.5 px-4 w-24 max-w-[90px] text-center">Tồn Kho</th>
+                  <th class="py-2.5 px-4 text-center w-28">Trang Chủ</th>
                   <th class="py-2.5 px-4 text-right">Thao Tác</th>
                 </tr>
               </thead>
               <tbody>
                 ${myProductsRows || `
                   <tr>
-                    <td colspan="6" class="py-8 text-center text-slate-500 text-xs">
+                    <td colspan="7" class="py-8 text-center text-slate-500 text-xs">
                       Động phủ chưa niêm yết bảo vật nào.
                     </td>
                   </tr>
@@ -358,6 +395,7 @@ async function renderSellerView() {
     `;
 
     // Khởi tạo subcategories cho form tạo mới
+    window.updateCreateSubCategories(sellerAllowedCat || 'cong-phap');
     window.updateCreateSubCategories('cong-phap');
 
   } catch (err) {
@@ -427,7 +465,8 @@ window.handleCreateProductSubmit = async function(e) {
     subType: form.subType ? form.subType.value.trim() : '',
     grade: form.grade.value,
     stock: form.stock.value,
-    image: form.image.value.trim() || 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600'
+    image: form.image.value.trim() || 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600',
+    isFeatured: form.isFeatured ? form.isFeatured.checked : false
   };
 
   try {
@@ -466,6 +505,15 @@ window.openEditProductModal = function(id, encodedProd) {
   const currentSubCategory = p.subCategory || '';
   const currentGrade = p.grade || 'Hoang';
 
+  const user = window.store.user;
+  const sellerAllowedCat = user && user.role !== 'admin' && window.getSellerAllowedCategory ? window.getSellerAllowedCategory(user) : null;
+  const editCatList = [
+    { id: 'cong-phap', name: 'Công Pháp & Bí Tịch' },
+    { id: 'dan-duoc', name: 'Đan Dược & Linh Thảo' },
+    { id: 'phap-bao', name: 'Pháp Bảo & Binh Khí' },
+    { id: 'linh-vat', name: 'Bảo Khố Tạp Vật' }
+  ].filter(c => !sellerAllowedCat || c.id === sellerAllowedCat);
+
   const initialSubCats = SUBCATEGORIES_MAP[currentCategory] || [];
   const subCatOptions = initialSubCats.map(sub => 
     `<option value="${sub}" ${sub === currentSubCategory ? 'selected' : ''}>${sub}</option>`
@@ -498,10 +546,7 @@ window.openEditProductModal = function(id, encodedProd) {
             <div>
               <label class="block text-xs text-slate-300 font-semibold mb-1">Danh Mục <span class="text-cyan-400">*</span></label>
               <select name="category" id="edit-product-category" onchange="window.handleEditCategoryChange(this.value)" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">
-                <option value="cong-phap" ${currentCategory === 'cong-phap' ? 'selected' : ''}>Công Pháp & Bí Tịch</option>
-                <option value="dan-duoc" ${currentCategory === 'dan-duoc' ? 'selected' : ''}>Đan Dược & Linh Thảo</option>
-                <option value="phap-bao" ${currentCategory === 'phap-bao' ? 'selected' : ''}>Pháp Bảo & Binh Khí</option>
-                <option value="linh-vat" ${currentCategory === 'linh-vat' ? 'selected' : ''}>Bảo Khố Tạp Vật</option>
+                ${editCatList.map(c => `<option value="${c.id}" ${c.id === currentCategory ? 'selected' : ''}>${c.name}</option>`).join('')}
               </select>
             </div>
 
@@ -575,6 +620,13 @@ window.openEditProductModal = function(id, encodedProd) {
             <textarea name="lore" rows="2" placeholder="Nguồn gốc rèn đúc, truyền thuyết hoặc biến cố gắn liền với bảo vật..." class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-800 focus:border-cyan-400 text-xs text-slate-100 outline-none transition">${p.lore || ''}</textarea>
           </div>
 
+          <div class="pt-1">
+            <label class="inline-flex items-center gap-2 cursor-pointer select-none">
+              <input type="checkbox" name="isFeatured" ${p.isFeatured ? 'checked' : ''} class="w-4 h-4 rounded text-amber-500 bg-slate-950 border-slate-700" />
+              <span class="text-xs font-semibold text-amber-300">⭐ Đặt làm Bảo vật Nổi bật (Hiển thị tại Trang Chủ)</span>
+            </label>
+          </div>
+
           <div class="flex justify-end gap-2 pt-2">
             <button type="button" onclick="document.getElementById('edit-product-modal').remove()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-400 text-xs font-semibold transition">
               Hủy
@@ -599,6 +651,16 @@ window.handleEditCategoryChange = function(catId) {
   select.innerHTML = subs.map(sub => `<option value="${sub}">${sub}</option>`).join('');
 };
 
+window.handleToggleFeatured = async function(id, isFeatured) {
+  try {
+    const res = await window.api.updateProduct(id, { isFeatured });
+    window.showToast(isFeatured ? '⭐ Đã ghim bảo vật nổi bật lên Trang Chủ!' : 'Đã gỡ bảo vật khỏi mục nổi bật Trang Chủ!', 'success');
+    renderSellerView();
+  } catch (err) {
+    window.showToast(err.message || 'Lỗi cập nhật nổi bật!', 'error');
+  }
+};
+
 window.handleUpdateProductSubmit = async function(e, id) {
   e.preventDefault();
   const form = e.target;
@@ -618,7 +680,8 @@ window.handleUpdateProductSubmit = async function(e, id) {
     category: form.category ? form.category.value : undefined,
     subCategory: form.subCategory ? form.subCategory.value : undefined,
     subType: form.subType ? form.subType.value.trim() : '',
-    grade: form.grade ? form.grade.value : undefined
+    grade: form.grade ? form.grade.value : undefined,
+    isFeatured: form.isFeatured ? form.isFeatured.checked : false
   };
 
   try {

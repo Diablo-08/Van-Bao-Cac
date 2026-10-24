@@ -87,12 +87,14 @@ router.post('/checkout', authenticate, async (req, res) => {
       product.stock -= item.quantity;
       await product.save();
 
-      // Cộng linh thạch tương ứng cho Seller của món hàng
+      // Cộng linh thạch tương ứng cho Seller của món hàng (Giới hạn tối đa 1.000.000 trừ admin)
       const sellerId = (product.seller && product.seller._id) ? product.seller._id : product.seller;
       if (sellerId) {
         const sellerUser = await User.findById(sellerId);
         if (sellerUser) {
-          sellerUser.linhThach = (sellerUser.linhThach || 0) + (product.price * item.quantity);
+          const earned = product.price * item.quantity;
+          const newBal = (sellerUser.linhThach || 0) + earned;
+          sellerUser.linhThach = sellerUser.role === 'admin' ? newBal : Math.min(1000000, newBal);
           await sellerUser.save();
         }
       }

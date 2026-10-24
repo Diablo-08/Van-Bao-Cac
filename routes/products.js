@@ -153,10 +153,24 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+async function resolveSellerCategory(user) {
+  if (!user || user.role === 'admin') return null;
+  const email = (user.email || '').toLowerCase();
+  const dongPhu = (user.dongPhu || '').toLowerCase();
+  if (email.includes('congphap') || dongPhu.includes('thiên thư') || dongPhu.includes('thien thu')) return 'cong-phap';
+  if (email.includes('danduoc') || dongPhu.includes('bách thảo') || dongPhu.includes('bach thao')) return 'dan-duoc';
+  if (email.includes('phapbao') || dongPhu.includes('vạn kiếm') || dongPhu.includes('van kiem')) return 'phap-bao';
+  if (email.includes('linhvat') || dongPhu.includes('vạn thú') || dongPhu.includes('van thu')) return 'linh-vat';
+
+  const existingProduct = await Product.findOne({ seller: user._id });
+  if (existingProduct) return existingProduct.category;
+  return null;
+}
+
 // POST /api/products - Seller / Admin đăng bán sản phẩm mới
 router.post('/', authenticate, requireRole('seller', 'admin'), async (req, res) => {
   try {
-    const { name, description, lore, price, category, subCategory, subType, grade, stock, image } = req.body;
+    const { name, description, lore, price, category, subCategory, subType, grade, stock, image, isFeatured } = req.body;
 
     if (!name || !description || !price || !category || !grade) {
       return res.status(400).json({
@@ -181,6 +195,17 @@ router.post('/', authenticate, requireRole('seller', 'admin'), async (req, res) 
       });
     }
 
+    // Đảm bảo Seller chỉ thêm được hàng thuộc danh mục của mình (Admin có thể thêm ở mọi danh mục)
+    if (req.user.role === 'seller') {
+      const allowedCat = await resolveSellerCategory(req.user);
+      if (allowedCat && category !== allowedCat) {
+        return res.status(403).json({
+          success: false,
+          message: 'Đạo hữu chỉ được phép niêm yết bảo vật thuộc danh mục quản lý của động phủ mình!'
+        });
+      }
+    }
+
     const newProduct = await Product.create({
       name: name.trim(),
       description: description.trim(),
@@ -193,7 +218,7 @@ router.post('/', authenticate, requireRole('seller', 'admin'), async (req, res) 
       stock: Math.max(0, parseInt(stock, 10) || 10),
       seller: req.user._id,
       image: (image && image.trim()) || '',
-      isFeatured: false
+      isFeatured: Boolean(isFeatured)
     });
 
     return res.status(201).json({
@@ -221,17 +246,32 @@ router.put('/:id', authenticate, requireRole('seller', 'admin'), async (req, res
       return res.status(403).json({ success: false, message: 'Đạo hữu không có quyền chỉnh sửa bảo vật của động phủ khác!' });
     }
 
-    const { name, description, lore, price, category, subCategory, subType, grade, stock, image } = req.body;
+    const { name, description, lore, price, category, subCategory, subType, grade, stock, image, isFeatured } = req.body;
     if (name) product.name = name.trim();
     if (description) product.description = description.trim();
     if (lore !== undefined) product.lore = lore;
     if (price !== undefined) product.price = Math.max(1, parseInt(price, 10));
-    if (category) product.category = category;
+
+    // Kiểm tra danh mục nếu seller thay đổi
+    if (category && category !== product.category) {
+      if (req.user.role === 'seller') {
+        const allowedCat = await resolveSellerCategory(req.user);
+        if (allowedCat && category !== allowedCat) {
+          return res.status(403).json({
+            success: false,
+            message: 'Đạo hữu chỉ được phép quản lý bảo vật thuộc danh mục của động phủ mình!'
+          });
+        }
+      }
+      product.category = category;
+    }
+
     if (subCategory !== undefined) product.subCategory = subCategory.trim();
     if (subType !== undefined) product.subType = subType.trim();
     if (grade) product.grade = grade;
     if (stock !== undefined) product.stock = Math.max(0, parseInt(stock, 10));
     if (image !== undefined) product.image = image.trim();
+    if (isFeatured !== undefined) product.isFeatured = Boolean(isFeatured);
 
     await product.save();
 

@@ -16,18 +16,22 @@ async function renderInventoryView() {
     const ordersData = await window.api.getMyOrders();
     const orders = ordersData.orders || [];
 
-    // Gom nhóm product IDs đã mua (unique)
+    // Gom nhóm product IDs đã mua (unique) và tính tổng số lượng đã mua
     const purchasedMap = new Map();
     orders.forEach(ord => {
       (ord.items || []).forEach(item => {
         const prodId = item.product && (item.product._id || item.product);
         const key = prodId ? prodId.toString() : item.name;
+        const qty = item.quantity || 1;
         if (!purchasedMap.has(key)) {
           purchasedMap.set(key, {
             productId: prodId ? prodId.toString() : null,
             name: item.name,
+            quantity: qty,
             fallbackImage: item.image || (item.product && item.product.image) || '/images/logo.png'
           });
+        } else {
+          purchasedMap.get(key).quantity += qty;
         }
       });
     });
@@ -67,6 +71,7 @@ async function renderInventoryView() {
       const live = entry.productId ? liveProductMap[entry.productId] : null;
       items.push({
         name: live ? live.name : entry.name,
+        quantity: entry.quantity,
         image: (live && live.image) ? live.image : entry.fallbackImage,
         stock: live ? (live.stock || 0) : -1 // -1 nghĩa là sản phẩm đã bị xóa khỏi kho
       });
@@ -87,6 +92,14 @@ async function renderInventoryView() {
             
             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none"></div>
 
+            <!-- Badge số lượng sở hữu -->
+            <div class="absolute top-2.5 right-2.5 z-10">
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-950/90 border border-emerald-500/50 text-emerald-300 font-bold text-xs shadow-lg flex items-center gap-1 backdrop-blur-xs">
+                <span class="text-[10px] text-emerald-400/80 font-normal">SL:</span>
+                <span>×${it.quantity}</span>
+              </span>
+            </div>
+
             ${isDeleted ? `
               <div class="absolute inset-0 bg-black/60 flex items-center justify-center pointer-events-none">
                 <span class="px-3 py-1 rounded-full bg-slate-900 text-slate-400 border border-slate-600 text-[11px] font-bold tracking-wider uppercase">
@@ -96,11 +109,14 @@ async function renderInventoryView() {
             ` : ''}
           </div>
 
-          <!-- Tên bảo vật -->
-          <div class="p-4 flex-1 flex items-center justify-center text-center bg-slate-900/60">
+          <!-- Tên bảo vật & Số lượng -->
+          <div class="p-4 flex-1 flex flex-col items-center justify-center text-center bg-slate-900/60">
             <h3 class="font-cinzel text-sm sm:text-base font-bold ${isDeleted ? 'text-slate-500' : 'text-slate-100 group-hover:text-emerald-300'} transition line-clamp-2">
               ${it.name}
             </h3>
+            <div class="mt-1.5 text-xs text-emerald-400/90 font-medium">
+              Số lượng: <strong class="font-bold text-emerald-300">${it.quantity}</strong>
+            </div>
           </div>
 
         </div>

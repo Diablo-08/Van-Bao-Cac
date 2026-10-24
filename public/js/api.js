@@ -64,6 +64,20 @@ const api = {
     return this.request('/auth/logout', { method: 'POST' });
   },
 
+  updateAvatar(avatar) {
+    return this.request('/auth/avatar', {
+      method: 'PUT',
+      body: JSON.stringify({ avatar })
+    });
+  },
+
+  changePassword(currentPassword, newPassword) {
+    return this.request('/auth/change-password', {
+      method: 'PUT',
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+  },
+
   // --- USER & LINH THẠCH ---
   recharge(amount, secretCode) {
     return this.request('/users/recharge', {
