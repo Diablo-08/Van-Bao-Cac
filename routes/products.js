@@ -51,7 +51,7 @@ router.get('/featured-by-category', async (req, res) => {
     for (const cat of CATEGORIES) {
       const items = await Product.find({ category: cat.id })
         .populate('seller', 'name email dongPhu')
-        .sort({ isFeatured: -1, createdAt: -1 })
+        .sort({ isFeatured: -1, featuredAt: -1, createdAt: -1 })
         .limit(5);
 
       result[cat.id] = {
@@ -206,6 +206,7 @@ router.post('/', authenticate, requireRole('seller', 'admin'), async (req, res) 
       }
     }
 
+    const boolFeatured = Boolean(isFeatured);
     const newProduct = await Product.create({
       name: name.trim(),
       description: description.trim(),
@@ -218,8 +219,27 @@ router.post('/', authenticate, requireRole('seller', 'admin'), async (req, res) 
       stock: Math.max(0, parseInt(stock, 10) || 10),
       seller: req.user._id,
       image: (image && image.trim()) || '',
-      isFeatured: Boolean(isFeatured)
+      isFeatured: boolFeatured,
+      featuredAt: boolFeatured ? new Date() : null
     });
+
+    if (boolFeatured) {
+      // Giới hạn tối đa 5 bảo vật nổi bật trên mỗi danh mục: ưu tiên cái mới chọn nhất, cái cũ nhất mất nổi bật
+      const others = await Product.find({
+        category: newProduct.category,
+        isFeatured: true,
+        _id: { $ne: newProduct._id }
+      }).sort({ featuredAt: -1, createdAt: -1 });
+
+      if (others.length >= 5) {
+        const toDemote = others.slice(4);
+        for (const oldProd of toDemote) {
+          oldProd.isFeatured = false;
+          oldProd.featuredAt = null;
+          await oldProd.save();
+        }
+      }
+    }
 
     return res.status(201).json({
       success: true,
@@ -271,7 +291,32 @@ router.put('/:id', authenticate, requireRole('seller', 'admin'), async (req, res
     if (grade) product.grade = grade;
     if (stock !== undefined) product.stock = Math.max(0, parseInt(stock, 10));
     if (image !== undefined) product.image = image.trim();
-    if (isFeatured !== undefined) product.isFeatured = Boolean(isFeatured);
+    if (isFeatured !== undefined) {
+      const boolFeatured = Boolean(isFeatured);
+      if (boolFeatured) {
+        product.isFeatured = true;
+        product.featuredAt = new Date();
+
+        // Giới hạn tối đa 5 bảo vật nổi bật trên mỗi danh mục: ưu tiên cái mới chọn nhất, cái cũ nhất mất nổi bật
+        const others = await Product.find({
+          category: product.category,
+          isFeatured: true,
+          _id: { $ne: product._id }
+        }).sort({ featuredAt: -1, createdAt: -1 });
+
+        if (others.length >= 5) {
+          const toDemote = others.slice(4);
+          for (const oldProd of toDemote) {
+            oldProd.isFeatured = false;
+            oldProd.featuredAt = null;
+            await oldProd.save();
+          }
+        }
+      } else {
+        product.isFeatured = false;
+        product.featuredAt = null;
+      }
+    }
 
     await product.save();
 
