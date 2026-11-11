@@ -22,7 +22,7 @@ Hệ thống hỗ trợ đăng nhập bằng cả **Đạo Hiệu (Tên đăng n
 | Thuộc tính | Chi tiết |
 | :--- | :--- |
 | **Đạo Hiệu (Tên Đăng Nhập)** | **`Bất Giới`** |
-| **Mật Khẩu (Password)** | **`phatotrongtam`** |
+| **Mật Khẩu (Password)** | **``** |
 | **Email (Truyền Âm Phù)** | `batgioi@vanbaocac.com` |
 | **Vai Trò (Role)** | `admin` (Tông Chủ Vạn Bảo Các) |
 | **Động Phủ Quản Lý** | Vạn Bảo Các Tổng Điện |
