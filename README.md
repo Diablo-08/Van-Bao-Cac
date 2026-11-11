@@ -9,7 +9,7 @@ Hệ thống Thương Mại Điện Tử Tu Tiên nội bộ dành cho nhóm 5 n
 - **Backend**: Node.js, Express 5, Mongoose, JWT, Bcryptjs
 - **Database**: MongoDB Atlas (`cultivation_db`)
 - **Frontend**: Vanilla JS (Single Page Application), Tailwind CSS (CDN), FontAwesome 6, Google Fonts (*Playfair Display*, *Lora*, *Be Vietnam Pro* - 100% hỗ trợ tiếng Việt UTF-8), Celestial Ambient Canvas Particles
-- **Cổng truy cập**: [http://localhost:5000](http://localhost:5000)
+- **Cổng truy cập**: [http://localhost:5000](http://van-bao-cac.onrender.com)
 
 ---
 
